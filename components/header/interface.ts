@@ -1,9 +1,13 @@
+import { ReactNode } from "react"
+
 export interface IHeader {
-    activeId?: number
+    activeId?: number,
+    children?: ReactNode
 }
 
 export interface IItem {
     id: number,
     title: string,
-    href: string
+    href: string,
+    allowItems: Array<number>
 }

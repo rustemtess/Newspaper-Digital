@@ -3,7 +3,7 @@ import { Items } from "./items"
 import { IHeader, IItem } from "./interface"
 import { useRouter } from "next/navigation"
 
-export default function Header ( { activeId }: IHeader ) {
+export default function Header ( { activeId, children }: IHeader ) {
 
     const router = useRouter();
 
@@ -11,21 +11,18 @@ export default function Header ( { activeId }: IHeader ) {
         <a
             onClick={ () => router.push( item.href ) } 
             key={ item.id } 
-            className={ 
-                `${ ( activeId === item.id ) ? 'cursor-default text-white' : 'cursor-pointer hover:text-white' }` 
-            }
+            className='cursor-pointer hover:text-white'
         >{ item.title }</a>
     );
 
-    const showItems = (): ReactNode => {  
-        return Items.map( item => {
-            if(activeId === 1 && item.id !== 3)
-                return headerButton(item);
-            else if(activeId === 2 && item.id !== 2)
-                return headerButton(item);
-            else if(activeId === 3 && item.id !== 3)
-                return headerButton(item);
-        } )
+    const showItems = () => {
+        return Items.map(item => {
+            if (item.id === activeId) 
+                return item.allowItems.map(idItem => {
+                    const allowedItem = Items.find(i => i.id === idItem);
+                    if (allowedItem) return headerButton(allowedItem);
+                });
+        });
     };
 
     return (
@@ -33,6 +30,7 @@ export default function Header ( { activeId }: IHeader ) {
             <h2 className='text-white'>Газета</h2>
             <nav className='flex items-center gap-5 text-gray-300'>
                 { showItems() }
+                { children }
             </nav>
         </header>
     )
